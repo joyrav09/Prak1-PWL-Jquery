@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 1 PWL Jquery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <br>
+            <h2 class="text-center">Pemesanan Produk</h2>
+            <hr>
+            <div class="row column">
+                <div class="col-3" id="hasil">
+                </div>             
+                
+                <div class="col-6">
+                    <div class="card bg-light mb-3 w-100">
+                        <div class="card-header">Data</div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Nama</label>
+                                <input type="email" class="form-control" id="nama" type="text" aria-describedby="emailHelp" placeholder="Masukkan nama">
+                            </div>
+                            <br>
+
+                            <table class="table" id="data_produk">
+                                <p><strong>Pilih Produk</strong></label>
+                                <br>
+                        
+                                <thead>
+                                    <th scope="col">Produk</th>
+                                    <th scope="col">Jumlah</th>
+                                    <th scope="col"></th>
+                                </thead>
+                                <tr id="row" >                              
+                                    <td>
+                                        <select class="form-control-sm" id="produk" onchange="tampil_data()">
+                                            <option disabled selected>Pilih produk</option>
+                                            <option value="Jet Tempur">Jet Tempur</option>
+                                            <option value="Nuklir Hiroshima">Nuklir Hiroshima</option>
+                                            <option value="Infinity Stone">Infinity Stone</option>
+                                            <option value="Burj Khalifa">Burj Khalifa</option>
+                                            <option value="Rudal Hipersonik">Rudal Hipersonik</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control-sm" id="jumlah" type="number" placeholder="Jumlah">
+                                    </td>
+                                    <td>
+                                        <button class="tambah_data btn-secondary btn">Tambah</button>
+                                    </td>                               
+                                </tr>
+                            </table>
+
+                            <div class="text-white bg-warning" id="warning">
+                            </div>
+                            <br>
+                            <div class="text-white bg-danger" id="warning2">
+                            </div>
+                            <br>
+                            <div class="d-grid gap-2">
+                                <button class=" btn btn-primary" id="pesan">Pesan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+            <br>
+            <p class="text-center">Joy Ravelo Tarigan - 119140037</p>
+        </div>
+    </div>
+    
+</body>
+<script>
+    var item = [{ "jumlah": 10, "nama": "Jet Tempur" },
+                { "jumlah": 1, "nama": "Nuklir Hiroshima" },
+                { "jumlah": 6, "nama": "Infinity Stone" },
+                { "jumlah": 5, "nama": "Burj Khalifa" },
+                { "jumlah": 3, "nama": "Rudal Hipersonik" },
+                ];
+
+    $(".tambah_data").hide();
+    var data = ''
+
+    $rowno = $("#data_produk tr").length;
+    $maks = 1
+
+    function hapus_data(rowno) {
+        $('#' + rowno).remove();
+        $maks--
+    }
+
+    function tampil_data() {
+        if ($maks < 5) {
+            $(".tambah_data").show();
+        }
+    }
+
+
+    function tambah_produk() {
+        if ($maks < 5) {
+            $("#data_produk tr:last").after(
+                "<tr id='row" + $rowno + 
+                "'><td><select class ='form-control-sm' id='produk" + $maks + 
+                "' onchange=tampil_data()><option disabled selected>Pilih produk</option><option value='Jet Tempur'>Jet Tempur</option><option value='Nuklir Hiroshima'>Nuklir Hiroshima</option><option value='Infinity Stone'>Infinity Stone</option><option value='Burj Khalifa'>Burj Khalifa</option><option value='Rudal Hipersonik'>Rudal Hipersonik</option></select></td><td><input type='number' class='form-control-sm' id='jumlah" + $maks + 
+                "'> </td><td><input class='hapus1 btn-danger btn' type='button' value='Hapus' onclick=hapus_data('row" + $rowno + 
+                "')></td></tr>");
+            $rowno = $rowno + 1;
+            $maks += 1
+            $(".tambah_data").hide();
+        } else { }
+    }
+
+
+    $(".tambah_data").click(function () {
+        tambah_produk();
+
+    })
+    $('#pesan').click(function () {
+        let status = 1
+        let beli = []
+        let jumlah = []
+        let hasil = $('.hasil').html();
+        
+
+        $('#hasil').html('')
+
+        for (i = 0; i < 5; i++) {
+            if (i == 0) {
+                beli[i] = $('#produk').val();
+                jumlah[i] = $('#jumlah').val();
+            } else {
+                beli[i] = $('#produk' + i).val();
+                jumlah[i] = $('#jumlah' + i).val();
+            }
+        }
+
+        for (i = 0; i < $maks; i++) {
+            for (j = $maks; j > i; j--) {
+                if (beli[i] == beli[j]) {
+                    $('#warning').html('Data Sudah ada');
+                    status = 0
+                }
+            }
+        }
+
+        for (i = 0; i < 5; i++) {
+            if (beli[i] == item[0].nama && jumlah[i] > item[0].jumlah) {
+                $('#warning2').html('<span>Jumlah beli ' + beli[i] + ' melebihi stok yang tersedia, silahkan beli dengan jumlah tidak lebih dari ' + item[0].jumlah);
+                status = 0
+            
+            } else if (beli[i] == item[1].nama && jumlah[i] > item[1].jumlah) {
+                $('#warning2').html('<span>Jumlah beli ' + beli[i] + ' melebihi stok yang tersedia, silahkan beli dengan jumlah tidak lebih dari ' + item[1].jumlah + '</span>');
+                status = 0
+            }
+            else if (beli[i] == item[2].nama && jumlah[i] > item[2].jumlah) {
+                $('#warning2').html('<span>Jumlah beli ' + beli[i] + ' melebihi stok yang tersedia, silahkan beli dengan jumlah tidak lebih dari ' + item[2].jumlah + '</span>');
+                status = 0
+            }
+            else if (beli[i] == item[3].nama && jumlah[i] > item[3].jumlah) {
+                $('#warning2').html('<span>Jumlah beli ' + beli[i] + ' melebihi stok yang tersedia, silahkan beli dengan jumlah tidak lebih dari ' + item[3].jumlah + '</span>');
+                status = 0
+            }else if (beli[i] == item[4].nama && jumlah[i] > item[4].jumlah) {
+                $('#warning2').html('<span>Jumlah beli ' + beli[i] + ' melebihi stok yang tersedia, silahkan beli dengan jumlah tidak lebih dari ' + item[4].jumlah + '</span>');
+                status = 0
+            }
+        };
+
+        if (status == 1) {
+            $('#warning').html('')
+            $('#warning2').html('')
+            let nama = $('#nama').val()
+            $('#hasil').append("<h4>" + nama + "</h4>")
+            for (i = 0; i < $rowno; i++) {
+                if (beli[i] != null) {
+                    $('#hasil').append("<li>" + beli[i] + " (" + jumlah[i] + ")</li>")
+                }
+            }
+        }
+
+    })
+</script>
+</html>
